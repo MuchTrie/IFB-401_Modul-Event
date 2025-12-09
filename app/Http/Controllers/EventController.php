@@ -90,11 +90,20 @@ public function index(Request $request)
         return view('events.show', ['eventId' => $id]);
     }
 
-    
+
+    public function attendanceList()
+    {
+    $events = \App\Models\Event::orderBy('start_at', 'asc')->get();
+
+    return view('events.attendance-list', compact('events'));
+    }
 
     
-    public function attendance($id)
+    public function attendance(Event $event)
     {
-        return view('events.attendance', ['eventId' => $id]);
+        return view('events.attendance', compact('event'));
     }
+
+    
+    
 }

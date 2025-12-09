@@ -21,7 +21,7 @@
                     <span>📅</span>
                     <span>Homepage</span>
                 </a>
-                <a href="{{ route('events.attendance', 1) }}" class="flex items-center gap-3 px-4 py-3 {{ Request::routeIs('events.attendance') ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-100' }} rounded-lg">
+                <a href="{{ route('attendance.list') }}" class="flex items-center gap-3 px-4 py-3 {{ Request::routeIs('events.attendance') ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-100' }} rounded-lg">
                     <span>✅</span>
                     <span>Kehadiran</span>
                 </a>

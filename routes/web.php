@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
-
+use App\Http\Controllers\EventAttendanceController;
 // Homepage - Jadwal Kegiatan & Event
 Route::get('/', [EventController::class, 'index'])->name('events.index');
 
@@ -35,4 +35,11 @@ Route::put('/events/{event}', [EventController::class, 'update'])->name('events.
 Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
 
 // Kehadiran Jamaah
-Route::get('/events/{event}/attendance', [EventController::class, 'attendance'])->name('events.attendance');
+
+// List event (tanpa parameter)
+Route::get('/attendance', [EventController::class, 'attendanceList'])
+    ->name('attendance.list');
+
+// Halaman absensi per event
+Route::get('/attendance/{event}', [EventController::class, 'attendance'])
+    ->name('attendance.show');

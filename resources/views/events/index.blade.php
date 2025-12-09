@@ -18,6 +18,24 @@ $monthName = $date->translatedFormat('F Y');
 $daysInMonth = $date->daysInMonth;
 $startDay = $date->dayOfWeek;
 $today = Carbon::today();
+$eventsByDate = [];
+
+foreach ($events as $ev) {
+    $day = Carbon::parse($ev->start_at)->day;
+
+    if (!isset($eventsByDate[$day])) {
+        $eventsByDate[$day] = [];
+    }
+
+    $eventsByDate[$day][] = $ev;
+}
+// Ambil 3 event terdekat (yang akan datang)
+    $upcomingEvents = collect($events)
+        ->filter(function($event) {
+            return Carbon::parse($event->start_at)->gte(Carbon::today());
+        })
+        ->sortBy('start_at')
+        ->take(3);
 @endphp
 
 @extends('layouts.app')
@@ -42,7 +60,7 @@ $today = Carbon::today();
 
     @include('components.debug-sidebar')
 
-    <!-- Calendar -->
+  <!-- Calendar -->
     <div class="p-6">
         <div class="bg-gray-100 rounded-2xl p-4">
             <div class="text-center mb-4 flex justify-between items-center">
@@ -86,50 +104,116 @@ $today = Carbon::today();
 
                 {{-- Tanggal --}}
                 @for ($i = 1; $i <= $daysInMonth; $i++)
-                    @if($today->day == $i && $today->month == $currentMonth && $today->year == $currentYear)
-                        <button class="aspect-square bg-gray-800 text-white rounded-lg p-2 text-sm font-medium hover:bg-gray-700">
-                            {{ $i }}
-                        </button>
-                    @else
-                        <button class="aspect-square bg-white rounded-lg p-2 text-sm font-medium hover:bg-gray-50">
-                            {{ $i }}
-                        </button>
-                    @endif
+                    @php
+                        $hasEvent = isset($eventsByDate[$i]);
+                    @endphp
+
+                    <button 
+                        class="aspect-square rounded-lg p-2 text-sm font-medium 
+                        {{ $today->day == $i && $today->month == $currentMonth && $today->year == $currentYear ? 'bg-gray-800 text-white' : ($hasEvent ? 'bg-[#EDD06B] text-black hover:bg-yellow-400' : 'bg-white hover:bg-gray-50') }}"
+                        
+                        @if($hasEvent)
+                            onclick='openCalendarEvent(@json($eventsByDate[$i]))'
+                        @endif
+                    >
+                        {{ $i }}
+                    </button>
                 @endfor
+
             </div>
         </div>
     </div>
 
     <!-- Event Terdekat -->
     <div class="px-6 pb-4">
-        <h2 class="text-lg font-bold mb-4">Event Terdekat</h2>
-        <div class="grid grid-cols-3 gap-3">
-            @foreach($events as $event)
-                <button 
-                    class="block"
-                    data-event='@json($event)'
-                    onclick="openModal(this.dataset.event)">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold">Event Terdekat</h2>
+            @if(count($upcomingEvents) > 3)
+                <a href="{{ route('events.index') }}" class="text-sm text-gray-600 hover:text-gray-800">
+                    Lihat Semua
+                </a>
+            @endif
+        </div>
+        
+        <div class="space-y-3">
+            @forelse($upcomingEvents as $event)
+                @php
+                    $eventDate = Carbon::parse($event->start_at);
+                    $isToday = $eventDate->isToday();
+                    $isTomorrow = $eventDate->isTomorrow();
+                @endphp
+                
+                    <div 
+                        class="bg-white border border-gray-200 rounded-xl p-4 hover:border-[#EDD06B] hover:shadow-md transition-all duration-300 cursor-pointer"
+                        data-event='@json($event)'
+                        onclick="openModal(JSON.parse(this.getAttribute('data-event')))"
+                    >
+                    <div class="flex gap-3">
+                        <!-- Date Badge -->
+                        <div class="flex flex-col items-center justify-center w-14 flex-shrink-0">
+                            <div class="text-lg font-bold text-gray-800">
+                                {{ $eventDate->format('d') }}
+                            </div>
+                            <div class="text-xs text-gray-600">
+                                {{ $eventDate->format('M') }}
+                            </div>
+                            @if($isToday)
+                                <div class="mt-1 px-2 py-0.5 bg-red-100 text-red-600 text-xs rounded-full">
+                                    Hari Ini
+                                </div>
+                            @elseif($isTomorrow)
+                                <div class="mt-1 px-2 py-0.5 bg-blue-100 text-blue-600 text-xs rounded-full">
+                                    Besok
+                                </div>
+                            @endif
+                        </div>
 
-                    <div class="bg-gray-100 rounded-xl p-4 hover:bg-gray-200 transition cursor-pointer">
-                        <div class="flex justify-center mb-3">
-                            <div class="w-12 h-12 bg-gray-300 rounded-lg flex items-center justify-center">
-                                @if($event->poster)
-                                    <img src="{{ $event->poster }}" class="w-12 h-12 object-cover rounded-lg" alt="Poster">
-                                @else
-                                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <!-- Event Details -->
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-start mb-1">
+                                <h3 class="font-bold text-gray-900 truncate">
+                                    {{ $event->nama_kegiatan }}
+                                </h3>
+                                <span class="text-xs text-gray-500 flex-shrink-0 ml-2">
+                                    {{ $eventDate->format('H:i') }}
+                                </span>
+                            </div>
+                            
+                            <p class="text-sm text-gray-600 line-clamp-2 mb-2">
+                                {{ Str::limit($event->description ?? 'Tidak ada deskripsi', 80) }}
+                            </p>
+                            
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-1 text-xs text-gray-500">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
                                         </path>
                                     </svg>
-                                @endif
+                                    <span>{{ $event->attendees ?? 0 }} peserta</span>
+                                </div>
+                                
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                    {{ $eventDate->isPast() ? 'bg-gray-100 text-gray-800' : 'bg-[#EDD06B] text-gray-900' }}">
+                                    {{ $event->category ?? 'Event' }}
+                                </span>
                             </div>
                         </div>
-                        <div class="h-16 bg-gray-200 rounded mb-2 flex items-center justify-center text-xs text-gray-500 text-center px-1">
-                            {{ $event->nama_kegiatan }}
-                        </div>
                     </div>
-                </button>
-            @endforeach
+                </div>
+            @empty
+                <div class="text-center py-8">
+                    <div class="w-16 h-16 mx-auto mb-3 text-gray-300">
+                        <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" 
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                    </div>
+                    <p class="text-gray-500">Tidak ada event yang akan datang</p>
+                    <p class="text-sm text-gray-400 mt-1">Cek bulan lainnya untuk melihat event</p>
+                </div>
+            @endforelse
         </div>
     </div>
 
@@ -149,9 +233,7 @@ $today = Carbon::today();
             <!-- Content -->
             <div class="p-6">
                 <div class="mb-4 bg-gradient-to-br from-gray-200 to-gray-100 rounded-2xl overflow-hidden shadow-lg" style="height: 300px;">
-                    <img id="modalEventPoster" 
-                        src="{{ $event->poster ? asset('storage/' . $event->poster) : 'https://via.placeholder.com/400x300?text=No+Poster' }}" 
-                        alt="Poster Event">
+                    <img id="modalEventPoster" class="w-full h-full object-cover" src="" alt="Poster Event">
                 </div>
 
                 <h3 id="modalEventTitle" class="text-xl font-bold text-[#315A62] mb-2"></h3>
@@ -182,6 +264,18 @@ $today = Carbon::today();
         </div>
     </div>
 
+    <div id="calendarEventModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl p-6">
+            <h2 class="text-xl font-bold mb-4">Event Pada Tanggal Ini</h2>
+
+            <div id="calendarEventList" class="space-y-3 mb-4"></div>
+
+            <button onclick="closeCalendarModal()" class="mt-5 w-full py-2 bg-gray-800 text-white rounded-xl">
+                Tutup
+            </button>
+        </div>
+    </div>
+
     <!-- Kegiatan Rutin (Placeholder) -->
     <div class="px-6 pb-6">
         <h2 class="text-lg font-bold mb-4">Kegiatan Rutin</h2>
@@ -202,6 +296,13 @@ $today = Carbon::today();
 <style>
     .scrollbar-hide::-webkit-scrollbar { display: none; }
     .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
 
     @keyframes slide-up { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     .animate-slide-up { animation: slide-up 0.5s ease-out; }
@@ -211,14 +312,23 @@ $today = Carbon::today();
 @push('scripts')
 <script>
 function openModal(eventData) {
-    const event = JSON.parse(eventData);
+    // Jika eventData sudah string (dari JSON), parse. Jika object, gunakan langsung
+    const event = typeof eventData === 'string' ? JSON.parse(eventData) : eventData;
+    
     document.getElementById('modalEventTitle').textContent = event.nama_kegiatan;
     document.getElementById('modalEventDesc').textContent = event.description ?? '-';
     document.getElementById('modalEventAttendees').textContent = (event.attendees ?? 0) + ' orang';
+    
     const startDate = new Date(event.start_at);
-    document.getElementById('modalEventDate').textContent = startDate.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-    document.getElementById('modalEventPoster').src = event.poster ? `/storage/${event.poster}` : 'https://via.placeholder.com/400x300?text=No+Poster';
+    const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+    document.getElementById('modalEventDate').textContent = startDate.toLocaleDateString('id-ID', options);
+    
+    document.getElementById('modalEventPoster').src = event.poster ? 
+        `/storage/${event.poster}` : 
+        'https://via.placeholder.com/400x300?text=No+Poster';
+
     document.getElementById('modalEventLink').href = `/events/${event.event_id}`;
+    
     const modal = document.getElementById('eventModal');
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
@@ -228,6 +338,43 @@ function closeModal() {
     const modal = document.getElementById('eventModal');
     modal.classList.add('hidden');
     document.body.style.overflow = 'auto';
+}
+
+function openCalendarEvent(events) {
+    let html = "";
+    events.forEach(ev => {
+        html += `
+            <div 
+                onclick='selectEventFromCalendar(${JSON.stringify(ev)})'
+                class="p-4 border rounded-xl hover:bg-gray-100 cursor-pointer transition-colors"
+            >
+                <div class="font-bold text-[#315A62] mb-1">${ev.nama_kegiatan}</div>
+                <div class="text-sm text-gray-600">
+                    ${new Date(ev.start_at).toLocaleString('id-ID', { 
+                        weekday: 'long', 
+                        day: 'numeric', 
+                        month: 'long',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })}
+                </div>
+            </div>
+        `;
+    });
+
+    document.getElementById('calendarEventList').innerHTML = html;
+    document.getElementById('calendarEventModal').classList.remove('hidden');
+}
+
+function selectEventFromCalendar(ev) {
+    closeCalendarModal(); // ← TUTUP MODAL LIST EVENT
+    openModal(ev);        // ← BUKA MODAL DETAIL EVENT
+}
+
+
+function closeCalendarModal() {
+    document.getElementById('calendarEventModal').classList.add('hidden');
 }
 
 document.getElementById('eventModal').addEventListener('click', function(e) {

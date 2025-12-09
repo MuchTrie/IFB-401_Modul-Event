@@ -15,4 +15,8 @@ class Event extends Model
     ];
 
     protected $dates = ['date'];
+    protected $primaryKey = 'event_id';  // 👈 WAJIB
+
+    public $incrementing = true;
+    protected $keyType = 'int';
 }
