@@ -233,7 +233,7 @@ foreach ($events as $ev) {
             <!-- Content -->
             <div class="p-6">
                 <div class="mb-4 bg-gradient-to-br from-gray-200 to-gray-100 rounded-2xl overflow-hidden shadow-lg" style="height: 300px;">
-                    <img id="modalEventPoster" class="w-full h-full object-cover" src="" alt="Poster Event">
+                    <img id="modalEventPoster" class="w-full h-full object-cover" ssrc="{{ $event->poster ? asset('storage/'.$event->poster) : 'https://via.placeholder.com/120x160?text=No+Image' }}" alt="Poster Event">
                 </div>
 
                 <h3 id="modalEventTitle" class="text-xl font-bold text-[#315A62] mb-2"></h3>

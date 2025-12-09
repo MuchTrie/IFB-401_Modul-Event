@@ -42,7 +42,7 @@ public function index(Request $request)
         return view('events.create');
     }
 
-    public function store(Request $request)
+public function store(Request $request)
 {
     $request->validate([
         'nama_kegiatan' => 'required|string|max:255',
@@ -69,15 +69,19 @@ public function index(Request $request)
     $event->status = $request->status;
     $event->attendees = 0;
 
+    // === SIMPAN POSTER ===
     if ($request->hasFile('poster')) {
-        $path = $request->file('poster')->store('events', 'public');
-        $event->poster = $path;
+        $posterPath = $request->file('poster')->store('posters', 'public');
+        $event->poster = $posterPath;   // ← WAJIB
+    } else {
+        $event->poster = null;
     }
 
     $event->save();
 
     return redirect()->route('events.index')->with('success', 'Event berhasil ditambahkan!');
 }
+
 
 
     public function createRoutine()
