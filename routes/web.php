@@ -23,7 +23,7 @@ Route::get('/events/create-routine', [EventController::class, 'createRoutine'])-
 Route::post('/events/routine', [EventController::class, 'storeRoutine'])->name('events.store-routine');
 
 // Detail Event
-Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
+Route::get('/events/{event_id}', [EventController::class, 'show'])->name('events.show');
 
 // Edit Event
 Route::get('/events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');

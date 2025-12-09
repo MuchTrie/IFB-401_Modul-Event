@@ -89,10 +89,13 @@ public function store(Request $request)
         return view('events.create-routine');
     }
 
-    public function show($id)
+    public function show($event_id)
     {
-        return view('events.show', ['eventId' => $id]);
+        $event = Event::where('event_id', $event_id)->firstOrFail();
+
+        return view('events.show', compact('event'));
     }
+
 
 
     public function attendanceList()
