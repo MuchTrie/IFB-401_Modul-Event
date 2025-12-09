@@ -17,7 +17,7 @@ $date = Carbon::create($currentYear, $currentMonth, 1);
 $monthName = $date->translatedFormat('F Y');
 $daysInMonth = $date->daysInMonth;
 $startDay = $date->dayOfWeek;
-$today = Carbon::today();
+$today = Carbon::now('Asia/Jakarta'); 
 $eventsByDate = [];
 
 foreach ($events as $ev) {
@@ -106,11 +106,12 @@ foreach ($events as $ev) {
                 @for ($i = 1; $i <= $daysInMonth; $i++)
                     @php
                         $hasEvent = isset($eventsByDate[$i]);
+                        
                     @endphp
 
                     <button 
                         class="aspect-square rounded-lg p-2 text-sm font-medium 
-                        {{ $today->day == $i && $today->month == $currentMonth && $today->year == $currentYear ? 'bg-gray-800 text-white' : ($hasEvent ? 'bg-[#EDD06B] text-black hover:bg-yellow-400' : 'bg-white hover:bg-gray-50') }}"
+                        {{ $today->day == $i && $today->month == $currentMonth && $today->year == $currentYear ? 'bg-gray-800 text-white' : ($hasEvent ? 'bg-green-400 text-black hover:bg-green-600' : 'bg-white hover:bg-gray-50') }}"
                         
                         @if($hasEvent)
                             onclick='openCalendarEvent(@json($eventsByDate[$i]))'
