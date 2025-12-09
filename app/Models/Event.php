@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    protected $table = 'events'; // nama tabel
+    use HasFactory;
 
+    protected $table = 'events'; // nama tabel
     protected $fillable = [
-        'title',
-        'description',
-        'date',
-        'location',
-        'image'
+        'title', 'description', 'date', 'attendees', 'poster'
     ];
+
+    protected $dates = ['date'];
 }

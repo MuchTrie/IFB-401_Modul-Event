@@ -6,14 +6,33 @@ use App\Http\Controllers\EventController;
 // Homepage - Jadwal Kegiatan & Event
 Route::get('/', [EventController::class, 'index'])->name('events.index');
 
+// -----------------------
+// Event Management Routes
+// -----------------------
+
 // Form Tambah Event
 Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
 
-// Form Tambah Acara Rutinan
+// Simpan Event Baru
+Route::post('/events', [EventController::class, 'store'])->name('events.store');
+
+// Form Tambah Acara Rutin
 Route::get('/events/create-routine', [EventController::class, 'createRoutine'])->name('events.create-routine');
 
+// Simpan Acara Rutin
+Route::post('/events/routine', [EventController::class, 'storeRoutine'])->name('events.store-routine');
+
 // Detail Event
-Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
+Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
+
+// Edit Event
+Route::get('/events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
+
+// Update Event
+Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
+
+// Hapus Event
+Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
 
 // Kehadiran Jamaah
-Route::get('/events/{id}/attendance', [EventController::class, 'attendance'])->name('events.attendance');
+Route::get('/events/{event}/attendance', [EventController::class, 'attendance'])->name('events.attendance');
