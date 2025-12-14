@@ -52,7 +52,8 @@ class RegistrationController extends Controller
         PesertaEvent::create([
             'sesi_event_id' => $sesi->sesi_event_id,
             'jemaah_id' => auth()->id(),
-            'status' => 'hadir',
+            'status_daftar' => 'pending',
+            'registered_at' => now(),
         ]);
         
         // Increment attendees count
