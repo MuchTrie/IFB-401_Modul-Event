@@ -392,7 +392,8 @@ public function store(Request $request)
         PesertaEvent::create([
             'sesi_event_id' => $sesi->sesi_event_id,
             'jemaah_id' => $request->jemaah_id,
-            'status' => 'hadir',
+            'status_daftar' => 'pending',
+            'registered_at' => now(),
         ]);
 
         $event->increment('attendees');
@@ -470,6 +471,8 @@ public function store(Request $request)
             $peserta->update([
                 'status_hadir' => $data['status_hadir'],
                 'marked_at' => now(),
+                'checkin_at' => now(),
+                'checkout_at' => now(),
             ]);
         }
 

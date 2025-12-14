@@ -83,25 +83,20 @@
                                             @elseif($event->status == 'published')
                                                 <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Disetujui</span>
                                             @else
-                                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Dibatalkan</span>
+                                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <a href="{{ route('events.edit', $event->event_id) }}" class="inline-flex items-center text-blue-600 hover:text-blue-800 mr-3">
-                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                                </svg>
-                                                Edit
-                                            </a>
-                                            <form action="{{ route('events.cancel', $event->event_id) }}" method="POST" class="inline" onsubmit="return confirm('Anda yakin ingin membatalkan event ini?');">
-                                                @csrf
-                                                <button type="submit" class="inline-flex items-center text-red-600 hover:text-red-800">
+                                            @if($event->status == 'draft')
+                                                <a href="{{ route('events.edit', $event->event_id) }}" class="inline-flex items-center text-blue-600 hover:text-blue-800">
                                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                     </svg>
-                                                    Batalkan
-                                                </button>
-                                            </form>
+                                                    Edit
+                                                </a>
+                                            @else
+                                                <span class="text-gray-400 text-xs">-</span>
+                                            @endif
                                         </td>
                                     </tr>
                                     @endforeach
