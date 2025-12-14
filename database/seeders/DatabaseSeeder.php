@@ -27,24 +27,36 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('admin123'),
         ]);
 
-        // Create Pengurus User (DKM)
+        // Create DKM User (for event approval and management)
         User::create([
             'username' => 'dkm',
             'nama_lengkap' => 'Ketua DKM',
             'email' => 'dkm@masjid.com',
             'no_hp' => '081234567891',
             'alamat' => 'Masjid Al-Nassr',
-            'role' => 'pengurus',
+            'role' => 'dkm',
             'status_aktif' => 'aktif',
             'password' => bcrypt('dkm123'),
         ]);
 
-        // Create Pengurus User (Panitia)
+        // Create Panitia User (for event creation)
         User::create([
             'username' => 'panitia',
             'nama_lengkap' => 'Panitia Event',
             'email' => 'panitia@masjid.com',
-            'no_hp' => '081234567892',
+            'no_hp' => '081234567893',
+            'alamat' => 'Masjid Al-Nassr',
+            'role' => 'panitia',
+            'status_aktif' => 'aktif',
+            'password' => bcrypt('panitia123'),
+        ]);
+
+        // Create additional Panitia User
+        User::create([
+            'username' => 'panitia2',
+            'nama_lengkap' => 'Siti Panitia',
+            'email' => 'panitia2@masjid.com',
+            'no_hp' => '081234567894',
             'alamat' => 'Masjid Al-Nassr',
             'role' => 'panitia',
             'status_aktif' => 'aktif',
@@ -56,7 +68,7 @@ class DatabaseSeeder extends Seeder
             'username' => 'jamaah',
             'nama_lengkap' => 'Ahmad Jamaah',
             'email' => 'jamaah@masjid.com',
-            'no_hp' => '081234567893',
+            'no_hp' => '081234567895',
             'alamat' => 'Jl. Contoh No. 123',
             'role' => 'jemaah',
             'status_aktif' => 'aktif',
@@ -68,8 +80,20 @@ class DatabaseSeeder extends Seeder
             'username' => 'budi',
             'nama_lengkap' => 'Budi Santoso',
             'email' => 'budi@gmail.com',
-            'no_hp' => '081234567894',
+            'no_hp' => '081234567896',
             'alamat' => 'Jl. Melati No. 45',
+            'role' => 'jemaah',
+            'status_aktif' => 'aktif',
+            'password' => bcrypt('password'),
+        ]);
+
+        // Create additional Jemaah
+        User::create([
+            'username' => 'siti',
+            'nama_lengkap' => 'Siti Aminah',
+            'email' => 'siti@gmail.com',
+            'no_hp' => '081234567897',
+            'alamat' => 'Jl. Mawar No. 12',
             'role' => 'jemaah',
             'status_aktif' => 'aktif',
             'password' => bcrypt('password'),

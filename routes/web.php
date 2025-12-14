@@ -26,9 +26,9 @@ Route::middleware('auth')->group(function () {
         return view('dashboard.admin');
     })->middleware('role:admin')->name('admin.dashboard');
 
-    Route::get('/pengurus/dashboard', function () {
-        return view('dashboard.pengurus');
-    })->middleware('role:pengurus')->name('pengurus.dashboard');
+    Route::get('/dkm/dashboard', function () {
+        return view('dashboard.dkm');
+    })->middleware('role:dkm')->name('dkm.dashboard');
 
     Route::get('/panitia/dashboard', function () {
         return view('dashboard.panitia');
@@ -38,9 +38,18 @@ Route::middleware('auth')->group(function () {
         return view('dashboard.jemaah');
     })->middleware('role:jemaah')->name('jemaah.dashboard');
 
-    // Legacy dashboard route
+    // Legacy dashboard route - redirect based on user role
     Route::get('/dashboard', function () {
-        return redirect()->route(Auth::user()->role . '.dashboard');
+        $role = Auth::user()->role;
+        
+        // Redirect to appropriate dashboard based on role
+        return match($role) {
+            'admin' => redirect()->route('admin.dashboard'),
+            'dkm' => redirect()->route('dkm.dashboard'),
+            'panitia' => redirect()->route('panitia.dashboard'),
+            'jemaah' => redirect()->route('jemaah.dashboard'),
+            default => redirect()->route('home'),
+        };
     })->name('dashboard');
 });
 
@@ -58,11 +67,11 @@ Route::middleware(['auth', 'role:admin,pengurus'])->group(function () {
     Route::get('/attendance/{event}', [EventController::class, 'attendance'])->name('attendance.show');
 });
 
-// Admin & Pengurus Routes - Approval system
-Route::middleware(['auth', 'role:pengurus,admin'])->group(function () {
-    Route::get('/pengurus/approvals', [ApprovalController::class, 'index'])->name('pengurus.approvals');
-    Route::post('/pengurus/approve/{event}', [ApprovalController::class, 'approve'])->name('pengurus.approve');
-    Route::post('/pengurus/reject/{event}', [ApprovalController::class, 'reject'])->name('pengurus.reject');
+// DKM Routes - Approval system (approve events created by Panitia)
+Route::middleware(['auth', 'role:dkm,admin'])->group(function () {
+    Route::get('/dkm/approvals', [ApprovalController::class, 'index'])->name('dkm.approvals');
+    Route::post('/dkm/approve/{event}', [ApprovalController::class, 'approve'])->name('dkm.approve');
+    Route::post('/dkm/reject/{event}', [ApprovalController::class, 'reject'])->name('dkm.reject');
 });
 
 // Jemaah Routes - Event Registration

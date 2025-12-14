@@ -14,6 +14,7 @@
                         <div>
                             <h3 class="text-2xl font-bold text-gray-800">Selamat Datang, Panitia!</h3>
                             <p class="text-sm text-gray-600">{{ Auth::user()->nama_lengkap }}</p>
+                            <p class="text-xs text-gray-500 mt-1">Role: Event Creator - Submit events for DKM approval</p>
                         </div>
                         <div class="text-right">
                             <div class="text-sm text-gray-600">{{ now()->isoFormat('dddd, D MMMM Y') }}</div>

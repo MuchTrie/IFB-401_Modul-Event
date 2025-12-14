@@ -8,7 +8,7 @@ use App\Models\Event;
 class ApprovalController extends Controller
 {
     /**
-     * Display pending events for approval
+     * Display pending events for approval (DKM)
      */
     public function index()
     {
@@ -17,7 +17,7 @@ class ApprovalController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('pengurus.approvals', compact('pendingEvents'));
+        return view('dkm.approvals', compact('pendingEvents'));
     }
 
     /**
