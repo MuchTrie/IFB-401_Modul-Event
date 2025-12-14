@@ -87,7 +87,7 @@
 
                             <!-- Action Buttons -->
                             <div class="flex gap-3 mt-6 pt-4 border-t border-gray-200">
-                                <form action="{{ route('pengurus.approve', $event->event_id) }}" method="POST" class="inline">
+                                <form action="{{ route('dkm.approve', $event->event_id) }}" method="POST" class="inline">
                                     @csrf
                                     <button type="submit" class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition">
                                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -97,7 +97,7 @@
                                     </button>
                                 </form>
 
-                                <form action="{{ route('pengurus.reject', $event->event_id) }}" method="POST" class="inline">
+                                <form action="{{ route('dkm.reject', $event->event_id) }}" method="POST" class="inline">
                                     @csrf
                                     <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition" onclick="return confirm('Yakin ingin menolak event ini?')">
                                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

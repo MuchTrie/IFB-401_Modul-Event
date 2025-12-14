@@ -13,8 +13,9 @@ class EventSeeder extends Seeder
      */
     public function run(): void
     {
-        // Get panitia user ID (assuming first panitia user exists)
-        $panitiaId = DB::table('users')->where('role', 'panitia')->first()?->user_id ?? 1;
+        // Get panitia users IDs
+        $panitia1 = DB::table('users')->where('username', 'panitia')->first()?->user_id ?? 1;
+        $panitia2 = DB::table('users')->where('username', 'panitia2')->first()?->user_id ?? $panitia1;
 
         $events = [
             // Event bulan ini (Desember 2025)
@@ -25,7 +26,7 @@ class EventSeeder extends Seeder
                 'end_at' => Carbon::create(2025, 12, 19, 21, 0, 0),
                 'status' => 'published',
                 'kuota' => 100,
-                'created_by' => $panitiaId,
+                'created_by' => $panitia1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -36,7 +37,7 @@ class EventSeeder extends Seeder
                 'end_at' => Carbon::create(2025, 12, 21, 12, 0, 0),
                 'status' => 'published',
                 'kuota' => 50,
-                'created_by' => $panitiaId,
+                'created_by' => $panitia2,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -47,7 +48,7 @@ class EventSeeder extends Seeder
                 'end_at' => Carbon::create(2025, 12, 25, 12, 0, 0),
                 'status' => 'published',
                 'kuota' => 200,
-                'created_by' => $panitiaId,
+                'created_by' => $panitia1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -60,7 +61,7 @@ class EventSeeder extends Seeder
                 'end_at' => Carbon::create(2026, 1, 7, 9, 0, 0),
                 'status' => 'published',
                 'kuota' => 150,
-                'created_by' => $panitiaId,
+                'created_by' => $panitia2,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -71,7 +72,7 @@ class EventSeeder extends Seeder
                 'end_at' => Carbon::create(2026, 1, 10, 17, 30, 0),
                 'status' => 'published',
                 'kuota' => 60,
-                'created_by' => $panitiaId,
+                'created_by' => $panitia1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -82,7 +83,7 @@ class EventSeeder extends Seeder
                 'end_at' => Carbon::create(2026, 1, 15, 12, 0, 0),
                 'status' => 'published',
                 'kuota' => 80,
-                'created_by' => $panitiaId,
+                'created_by' => $panitia2,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -93,7 +94,7 @@ class EventSeeder extends Seeder
                 'end_at' => Carbon::create(2026, 1, 18, 10, 0, 0),
                 'status' => 'published',
                 'kuota' => 40,
-                'created_by' => $panitiaId,
+                'created_by' => $panitia1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -104,7 +105,7 @@ class EventSeeder extends Seeder
                 'end_at' => Carbon::create(2026, 1, 28, 21, 0, 0),
                 'status' => 'published',
                 'kuota' => 120,
-                'created_by' => $panitiaId,
+                'created_by' => $panitia2,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -117,7 +118,7 @@ class EventSeeder extends Seeder
                 'end_at' => Carbon::create(2026, 2, 1, 17, 0, 0),
                 'status' => 'draft',
                 'kuota' => 250,
-                'created_by' => $panitiaId,
+                'created_by' => $panitia1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

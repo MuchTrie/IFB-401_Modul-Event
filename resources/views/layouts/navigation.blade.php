@@ -27,8 +27,8 @@
                             </x-nav-link>
                         @endif
 
-                        @if(Auth::user()->role === 'pengurus' || Auth::user()->role === 'admin')
-                            <x-nav-link :href="route('pengurus.approvals')" :active="request()->routeIs('pengurus.approvals')">
+                        @if(Auth::user()->role === 'dkm' || Auth::user()->role === 'admin')
+                            <x-nav-link :href="route('dkm.approvals')" :active="request()->routeIs('dkm.approvals')">
                                 {{ __('Approval Event') }}
                             </x-nav-link>
                         @endif
@@ -114,8 +114,8 @@
                     </x-responsive-nav-link>
                 @endif
 
-                @if(Auth::user()->role === 'pengurus' || Auth::user()->role === 'admin')
-                    <x-responsive-nav-link :href="route('pengurus.approvals')" :active="request()->routeIs('pengurus.approvals')">
+                @if(Auth::user()->role === 'dkm' || Auth::user()->role === 'admin')
+                    <x-responsive-nav-link :href="route('dkm.approvals')" :active="request()->routeIs('dkm.approvals')">
                         {{ __('Approval Event') }}
                     </x-responsive-nav-link>
                 @endif
