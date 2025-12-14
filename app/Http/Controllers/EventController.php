@@ -8,9 +8,50 @@ use App\Models\User;
 use App\Models\SesiEvent;
 use App\Models\PesertaEvent;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 
 class EventController extends Controller
 {
+    // Method untuk fetch jadwal sholat dari API
+    private function getPrayerTimes()
+    {
+        try {
+            // Koordinat Bandung (sesuaikan dengan lokasi masjid Anda)
+            $latitude = -6.9271;  // Latitude Bandung
+            $longitude = 107.6411; // Longitude Bandung
+            $date = now('Asia/Jakarta')->format('d-m-Y');
+            
+            $response = Http::get('https://api.aladhan.com/v1/timings/' . $date, [
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+                'method' => 2, // ISNA method
+                'tune' => '0,0,0,0,0,0,0,0,3'
+            ]);
+            
+            if ($response->successful()) {
+                $timings = $response->json()['data']['timings'];
+                return [
+                    'Subuh' => $timings['Fajr'],
+                    'Dzuhur' => $timings['Dhuhr'],
+                    'Ashar' => $timings['Asr'],
+                    'Magrib' => $timings['Maghrib'],
+                    'Isya' => $timings['Isha']
+                ];
+            }
+        } catch (\Exception $e) {
+            // Fallback default times jika API tidak bisa diakses
+        }
+        
+        // Default prayer times (fallback)
+        return [
+            'Subuh' => '05:15',
+            'Dzuhur' => '12:15',
+            'Ashar' => '15:30',
+            'Magrib' => '17:50',
+            'Isya' => '19:15'
+        ];
+    }
+
 public function index(Request $request)
 {
     $month = $request->query('month', now()->month);
@@ -32,6 +73,9 @@ public function index(Request $request)
                    ->whereYear('start_at', $year)
                    ->orderBy('start_at', 'asc')
                    ->get();
+
+    // Get prayer times
+    $prayerTimes = $this->getPrayerTimes();
 
     // Kegiatan rutin (tidak terikat tanggal spesifik)
     $kegiatanRutin = [
@@ -62,7 +106,7 @@ public function index(Request $request)
     ];
 
     return view('events.index', compact(
-        'currentMonth', 'currentYear', 'daysInMonth', 'startDay', 'monthName', 'today', 'events', 'kegiatanRutin'
+        'currentMonth', 'currentYear', 'daysInMonth', 'startDay', 'monthName', 'today', 'events', 'kegiatanRutin', 'prayerTimes'
     ));
 }
 

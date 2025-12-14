@@ -9,9 +9,9 @@
                 <div class="p-6">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h3 class="text-2xl font-bold text-gray-800">Selamat Datang, DKM!</h3>
+                            <h3 class="text-2xl font-bold text-gray-800">Selamat Datang</h3>
                             <p class="text-sm text-gray-600">{{ Auth::user()->nama_lengkap }}</p>
-                            <p class="text-xs text-gray-500 mt-1">Role: Event Approval & Mosque Management</p>
+                            <p class="text-xs text-gray-500 mt-1">Role: Event Approval </p>
                         </div>
                         <div class="text-right">
                             <div class="text-sm text-gray-600">{{ now()->isoFormat('dddd, D MMMM Y') }}</div>
@@ -107,7 +107,7 @@
                             </div>
                         </a>
 
-                        <a href="{{ route('events.index') }}" class="flex items-center p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition">
+                        <a href="{{ route('dkm.approvals') }}" class="flex items-center p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition">
                             <svg class="w-8 h-8 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
@@ -187,9 +187,6 @@
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold text-gray-800">Recently Approved Events</h3>
-                        <a href="{{ route('events.index') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                            View All →
-                        </a>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
