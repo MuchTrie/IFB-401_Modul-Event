@@ -163,4 +163,83 @@ public function store(Request $request)
     {
         return view('events.jadwal-solat');
     }
+
+    public function adminIndex(Request $request)
+    {
+        $query = Event::with('creator')->orderBy('start_at', 'desc');
+
+        // Filter berdasarkan status
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        // Filter berdasarkan bulan/tahun
+        if ($request->has('month') && $request->month != '') {
+            $query->whereMonth('start_at', $request->month);
+        }
+        if ($request->has('year') && $request->year != '') {
+            $query->whereYear('start_at', $request->year);
+        }
+
+        // Search
+        if ($request->has('search') && $request->search != '') {
+            $query->where('nama_kegiatan', 'like', '%' . $request->search . '%');
+        }
+
+        $events = $query->paginate(15);
+
+        return view('admin.events.index', compact('events'));
+    }
+
+    public function edit($event_id)
+    {
+        $event = Event::where('event_id', $event_id)->firstOrFail();
+        return view('events.edit', compact('event'));
+    }
+
+    public function update(Request $request, $event_id)
+    {
+        $event = Event::where('event_id', $event_id)->firstOrFail();
+
+        $validated = $request->validate([
+            'nama_kegiatan' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'jenis_kegiatan' => 'nullable|string',
+            'lokasi' => 'nullable|string',
+            'start_at' => 'required|date',
+            'end_at' => 'required|date|after:start_at',
+            'kuota' => 'nullable|integer|min:1',
+            'status' => 'required|in:draft,published,cancelled',
+            'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $event->fill($validated);
+
+        if ($request->hasFile('poster')) {
+            // Delete old poster if exists
+            if ($event->poster && \Storage::disk('public')->exists($event->poster)) {
+                \Storage::disk('public')->delete($event->poster);
+            }
+            $posterPath = $request->file('poster')->store('posters', 'public');
+            $event->poster = $posterPath;
+        }
+
+        $event->save();
+
+        return redirect()->route('admin.events.index')->with('success', 'Event berhasil diupdate!');
+    }
+
+    public function destroy($event_id)
+    {
+        $event = Event::where('event_id', $event_id)->firstOrFail();
+        
+        // Delete poster if exists
+        if ($event->poster && \Storage::disk('public')->exists($event->poster)) {
+            \Storage::disk('public')->delete($event->poster);
+        }
+
+        $event->delete();
+
+        return redirect()->route('admin.events.index')->with('success', 'Event berhasil dihapus!');
+    }
 }

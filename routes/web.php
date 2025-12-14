@@ -71,10 +71,22 @@ Route::middleware(['auth', 'role:jemaah'])->group(function () {
     Route::post('/events/{event}/unregister', [RegistrationController::class, 'unregister'])->name('events.unregister');
 });
 
-// Admin Only Routes - User Management
+// Admin Only Routes - User Management & Events
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', UserController::class);
     Route::post('users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
+});
+
+// Admin & Panitia Routes - Event Management
+Route::middleware(['auth', 'role:admin,panitia'])->group(function () {
+    Route::get('/events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
+    Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
+    Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
+});
+
+// Admin only - View all events in table
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('events', [EventController::class, 'adminIndex'])->name('events.index');
 });
 
 require __DIR__.'/auth.php';
