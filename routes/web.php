@@ -94,6 +94,8 @@ Route::middleware(['auth', 'role:dkm,admin'])->group(function () {
 Route::middleware(['auth', 'role:jemaah'])->group(function () {
     Route::post('/events/{event}/register', [RegistrationController::class, 'register'])->name('events.register');
     Route::post('/events/{event}/unregister', [RegistrationController::class, 'unregister'])->name('events.unregister');
+    Route::get('/jemaah/calendar', [EventController::class, 'calendar'])->name('jemaah.calendar');
+    Route::get('/jemaah/my-events', [EventController::class, 'myEvents'])->name('jemaah.my-events');
 });
 
 // Admin Only Routes - User Management & Events
