@@ -55,4 +55,27 @@ class ApprovalController extends Controller
         
         return redirect()->back()->with('error', 'Event tidak dapat ditolak!');
     }
+
+    /**
+     * Display all events with filter (approved/rejected)
+     */
+    public function allEvents(Request $request)
+    {
+        $filter = $request->get('filter', 'all'); // all, approved, rejected
+        
+        $query = Event::with('creator');
+        
+        if ($filter === 'approved') {
+            $query->where('status', 'published');
+        } elseif ($filter === 'rejected') {
+            $query->where('status', 'cancelled');
+        } else {
+            // Show both approved and rejected
+            $query->whereIn('status', ['published', 'cancelled']);
+        }
+        
+        $events = $query->latest()->paginate(15);
+        
+        return view('dkm.all-events', compact('events', 'filter'));
+    }
 }
