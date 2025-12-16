@@ -156,6 +156,56 @@ public function store(Request $request)
     return redirect()->route('events.mine')->with('success', 'Event berhasil diajukan! Menunggu approval dari DKM.');
 }
 
+    /**
+     * Show create form for admin
+     */
+    public function adminCreate()
+    {
+        return view('admin.events.create');
+    }
+
+    /**
+     * Store event by admin (auto-published)
+     */
+    public function adminStore(Request $request)
+    {
+        $request->validate([
+            'nama_kegiatan' => 'required|string|max:255',
+            'jenis_kegiatan' => 'nullable|string|max:100',
+            'lokasi' => 'nullable|string|max:255',
+            'start_at' => 'required|date',
+            'end_at' => 'required|date|after_or_equal:start_at',
+            'kuota' => 'nullable|integer|min:0',
+            'rule' => 'nullable|string',
+            'description' => 'nullable|string',
+            'poster' => 'nullable|image|max:2048',
+        ]);
+
+        $event = new Event();
+        $event->nama_kegiatan = $request->nama_kegiatan;
+        $event->jenis_kegiatan = $request->jenis_kegiatan;
+        $event->lokasi = $request->lokasi;
+        $event->start_at = $request->start_at;
+        $event->end_at = $request->end_at;
+        $event->kuota = $request->kuota;
+        $event->rule = $request->rule;
+        $event->description = $request->description;
+        $event->status = 'published'; // Admin creates event as published
+        $event->attendees = 0;
+        $event->created_by = auth()->id();
+
+        // Save poster
+        if ($request->hasFile('poster')) {
+            $posterPath = $request->file('poster')->store('posters', 'public');
+            $event->poster = $posterPath;
+        } else {
+            $event->poster = null;
+        }
+
+        $event->save();
+
+        return redirect()->route('admin.events.index')->with('success', 'Event berhasil ditambahkan!');
+    }
 
 
     public function createRoutine()

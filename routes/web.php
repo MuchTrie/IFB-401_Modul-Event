@@ -112,6 +112,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 // Admin only - View all events in table
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('events', [EventController::class, 'adminIndex'])->name('events.index');
+    Route::get('events/create', [EventController::class, 'adminCreate'])->name('events.create');
+    Route::post('events', [EventController::class, 'adminStore'])->name('events.store');
 });
 
 require __DIR__.'/auth.php';
