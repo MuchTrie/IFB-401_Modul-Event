@@ -12,13 +12,7 @@
 
                 <!-- Navigation Links (Only for authenticated users) -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    @auth
-                        @if(Auth::user()->role === 'admin')
-                            <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
-                                {{ __('Kelola User') }}
-                            </x-nav-link>
-                        @endif
-                    @endauth
+                    {{-- Navigation links can be added here if needed --}}
                 </div>
             </div>
 
@@ -79,13 +73,7 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            @auth
-                @if(Auth::user()->role === 'admin')
-                    <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
-                        {{ __('Kelola User') }}
-                    </x-responsive-nav-link>
-                @endif
-            @endauth
+            {{-- Responsive navigation links can be added here if needed --}}
         </div>
 
         <!-- Responsive Settings Options -->

@@ -97,11 +97,16 @@
                             <div class="space-y-3">
                                 @foreach($upcomingEvents as $event)
                                 <div class="border-l-4 border-blue-600 bg-blue-50 p-4 rounded-lg hover:shadow-md transition cursor-pointer" onclick="openDetailModal({{ $event->event_id }})">
-                                    <h3 class="font-bold text-gray-900">{{ $event->nama_kegiatan }}</h3>
-                                    <p class="text-sm text-gray-600">
-                                        📅 {{ \Carbon\Carbon::parse($event->start_at)->format('d M Y, H:i') }}
-                                    </p>
-                                    <p class="text-sm text-gray-600">📍 {{ $event->lokasi }}</p>
+                                    <div class="flex justify-between items-start">
+                                        <div class="flex-1">
+                                            <h3 class="font-bold text-gray-900">{{ $event->nama_kegiatan }}</h3>
+                                            <p class="text-sm text-gray-600">
+                                                📅 {{ \Carbon\Carbon::parse($event->start_at)->format('d M Y, H:i') }}
+                                            </p>
+                                            <p class="text-sm text-gray-600">📍 {{ $event->lokasi }}</p>
+                                        </div>
+                                        <p class="text-sm text-blue-600 font-semibold">👁️ Lihat Detail</p>
+                                    </div>
                                 </div>
                                 @endforeach
                             </div>
@@ -126,11 +131,16 @@
                             <div class="space-y-3">
                                 @foreach($pastEvents as $event)
                                 <div class="border-l-4 border-gray-400 bg-gray-50 p-4 rounded-lg hover:shadow-md transition cursor-pointer" onclick="openDetailModal({{ $event->event_id }})">
-                                    <h3 class="font-bold text-gray-900">{{ $event->nama_kegiatan }}</h3>
-                                    <p class="text-sm text-gray-600">
-                                        📅 {{ \Carbon\Carbon::parse($event->start_at)->format('d M Y, H:i') }}
-                                    </p>
-                                    <p class="text-sm text-gray-600">📍 {{ $event->lokasi }}</p>
+                                    <div class="flex justify-between items-start">
+                                        <div class="flex-1">
+                                            <h3 class="font-bold text-gray-900">{{ $event->nama_kegiatan }}</h3>
+                                            <p class="text-sm text-gray-600">
+                                                📅 {{ \Carbon\Carbon::parse($event->start_at)->format('d M Y, H:i') }}
+                                            </p>
+                                            <p class="text-sm text-gray-600">📍 {{ $event->lokasi }}</p>
+                                        </div>
+                                        <p class="text-sm text-gray-600 font-semibold">👁️ Lihat Detail</p>
+                                    </div>
                                 </div>
                                 @endforeach
                             </div>
@@ -213,12 +223,6 @@
                         <p id="modalRule" class="text-gray-900"></p>
                     </div>
                 </div>
-
-                <div class="mt-6 pt-4 border-t">
-                    <a id="modalDetailLink" href="#" class="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center font-bold py-3 rounded-lg transition">
-                        Lihat Detail Lengkap
-                    </a>
-                </div>
             </div>
         </div>
     </div>
@@ -263,7 +267,6 @@
                 day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' 
             });
             document.getElementById('modalKuota').textContent = event.kuota || 'Tidak terbatas';
-            document.getElementById('modalDetailLink').href = `/events/${event.event_id}`;
 
             if (event.poster) {
                 document.getElementById('modalPoster').src = '/storage/' + event.poster;

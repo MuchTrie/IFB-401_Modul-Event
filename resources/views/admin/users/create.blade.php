@@ -67,7 +67,9 @@
                             <label for="role" class="block text-sm font-medium text-gray-700 mb-2">Role <span class="text-red-500">*</span></label>
                             <select name="role" id="role" required class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 @error('role') border-red-500 @enderror">
                                 <option value="">Pilih Role</option>
-                                <option value="jemaah" {{ old('role') == 'jemaah' ? 'selected' : '' }}>Jemaah</option>                            <option value="panitia" {{ old('role') == 'panitia' ? 'selected' : '' }}>Panitia</option>                                <option value="pengurus" {{ old('role') == 'pengurus' ? 'selected' : '' }}>Pengurus</option>
+                                <option value="jemaah" {{ old('role') == 'jemaah' ? 'selected' : '' }}>Jemaah</option>
+                                <option value="panitia" {{ old('role') == 'panitia' ? 'selected' : '' }}>Panitia</option>
+                                <option value="dkm" {{ old('role') == 'dkm' ? 'selected' : '' }}>DKM</option>
                                 <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                             </select>
                             @error('role')

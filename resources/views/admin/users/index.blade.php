@@ -39,7 +39,7 @@
                                 <option value="">Semua Role</option>
                                 <option value="jemaah" {{ request('role') == 'jemaah' ? 'selected' : '' }}>Jemaah</option>
                                 <option value="panitia" {{ request('role') == 'panitia' ? 'selected' : '' }}>Panitia</option>
-                                <option value="pengurus" {{ request('role') == 'pengurus' ? 'selected' : '' }}>Pengurus</option>
+                                <option value="dkm" {{ request('role') == 'dkm' ? 'selected' : '' }}>DKM</option>
                                 <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                             </select>
                         </div>
@@ -100,6 +100,10 @@
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
                                                 Admin
                                             </span>
+                                        @elseif($user->username == 'dkm' || $user->role == 'dkm')
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-teal-100 text-teal-800">
+                                                Ketua DKM
+                                            </span>
                                         @elseif($user->role == 'pengurus')
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                                                 Pengurus
@@ -153,6 +157,13 @@
                     <!-- Pagination -->
                     <div class="mt-4">
                         {{ $users->links() }}
+                    </div>
+                    
+                    <!-- Tombol Kembali -->
+                    <div class="mt-6">
+                        <a href="{{ route('admin.dashboard') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium inline-block">
+                            ← Kembali ke Dashboard
+                        </a>
                     </div>
                 </div>
             </div>
