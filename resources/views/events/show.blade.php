@@ -8,7 +8,7 @@
     <!-- Header -->
     <div class="p-6 border-b">
         <div class="flex items-center gap-4">
-            <a href="{{ route('events.index') }}" class="p-2 rounded-full hover:bg-gray-100">
+            <a href="{{ auth()->check() && auth()->user()->role === 'dkm' ? route('dkm.approvals') : route('events.index') }}" class="p-2 rounded-full hover:bg-gray-100">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -74,7 +74,7 @@
 
         <!-- Jam -->
         <p class="text-gray-700 mb-6">
-            🕒 {{ $event->start_time }} - {{ $event->end_time }}
+            🕒 {{ \Carbon\Carbon::parse($event->start_at)->format('H:i') }} - {{ \Carbon\Carbon::parse($event->end_at)->format('H:i') }}
         </p>
 
         <!-- Deskripsi -->
