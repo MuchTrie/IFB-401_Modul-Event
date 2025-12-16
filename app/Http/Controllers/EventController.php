@@ -522,5 +522,90 @@ public function store(Request $request)
 
         return redirect()->back()->with('success', 'Absen berhasil dicatat!');
     }
+
+    /**
+     * Display calendar page for jemaah
+     */
+    public function calendar(Request $request)
+    {
+        $month = $request->query('month', now()->month);
+        $year  = $request->query('year', now()->year);
+
+        $date = \Carbon\Carbon::create($year, $month, 1);
+
+        $currentMonth = $date->month;
+        $currentYear  = $date->year;
+        $daysInMonth  = $date->daysInMonth;
+        $startDay     = $date->dayOfWeek;
+        $today = \Carbon\Carbon::today();
+
+        // Ambil semua event published
+        $events = Event::where('status', 'published')
+                       ->whereMonth('start_at', $month)
+                       ->whereYear('start_at', $year)
+                       ->orderBy('start_at', 'asc')
+                       ->get();
+
+        // Group events by date
+        $eventsByDate = [];
+        foreach ($events as $event) {
+            $day = \Carbon\Carbon::parse($event->start_at)->day;
+            if (!isset($eventsByDate[$day])) {
+                $eventsByDate[$day] = [];
+            }
+            $eventsByDate[$day][] = $event;
+        }
+
+        // Months for dropdown
+        $months = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+        ];
+
+        // All events list (upcoming and past)
+        // Upcoming: event yang belum selesai (end_at >= hari ini)
+        $upcomingEvents = Event::where('status', 'published')
+                               ->where('end_at', '>=', now())
+                               ->orderBy('start_at', 'asc')
+                               ->paginate(10, ['*'], 'upcoming');
+
+        // Past: event yang sudah selesai (end_at < hari ini)
+        $pastEvents = Event::where('status', 'published')
+                           ->where('end_at', '<', now())
+                           ->orderBy('start_at', 'desc')
+                           ->paginate(10, ['*'], 'past');
+
+        return view('jemaah.calendar', compact(
+            'currentMonth', 'currentYear', 'daysInMonth', 'startDay', 
+            'today', 'eventsByDate', 'months', 'upcomingEvents', 'pastEvents'
+        ));
+    }
+
+    /**
+     * Display my events for jemaah
+     */
+    public function myEvents()
+    {
+        $jemaahId = auth()->id();
+        
+        // Get events that the user is registered for
+        $myEvents = PesertaEvent::with(['sesiEvent.event', 'sesiEvent'])
+                                ->where('jemaah_id', $jemaahId)
+                                ->get()
+                                ->map(function($peserta) {
+                                    return [
+                                        'event' => $peserta->sesiEvent->event,
+                                        'sesi' => $peserta->sesiEvent,
+                                        'attendance_status' => $peserta->status_hadir, // Changed from attendance_status
+                                        'registered_at' => $peserta->created_at
+                                    ];
+                                })
+                                ->sortByDesc(function($item) {
+                                    return $item['event']->start_at;
+                                });
+
+        return view('jemaah.my-events', compact('myEvents'));
+    }
 }
 

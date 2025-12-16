@@ -71,7 +71,7 @@
                             </div>
                             <div class="ml-4">
                                 <p class="text-sm font-medium text-gray-600">Total Events</p>
-                                <p class="text-2xl font-bold text-gray-900">{{ \App\Models\Event::count() }}</p>
+                                <p class="text-2xl font-bold text-gray-900">{{ \App\Models\Event::where('status', 'published')->count() }}</p>
                             </div>
                         </div>
                     </div>
@@ -83,7 +83,7 @@
                 <div class="p-6">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Menu Utama</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <a href="{{ route('events.index') }}" class="flex items-center p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition">
+                        <a href="{{ route('jemaah.calendar') }}" class="flex items-center p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition">
                             <svg class="w-8 h-8 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
@@ -93,7 +93,7 @@
                             </div>
                         </a>
 
-                        <a href="{{ route('events.index', ['my_events' => true]) }}" class="flex items-center p-4 bg-green-50 hover:bg-green-100 rounded-lg transition">
+                        <a href="{{ route('jemaah.my-events') }}" class="flex items-center p-4 bg-green-50 hover:bg-green-100 rounded-lg transition">
                             <svg class="w-8 h-8 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                             </svg>
@@ -111,7 +111,7 @@
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold text-gray-800">Event Yang Saya Ikuti</h3>
-                        <a href="{{ route('events.index', ['my_events' => true]) }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                        <a href="{{ route('jemaah.my-events') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
                             Lihat Semua →
                         </a>
                     </div>
