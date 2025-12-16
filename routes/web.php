@@ -87,6 +87,7 @@ Route::middleware(['auth', 'role:dkm,admin'])->group(function () {
     Route::get('/dkm/approvals', [ApprovalController::class, 'index'])->name('dkm.approvals');
     Route::post('/dkm/approve/{event}', [ApprovalController::class, 'approve'])->name('dkm.approve');
     Route::post('/dkm/reject/{event}', [ApprovalController::class, 'reject'])->name('dkm.reject');
+    Route::get('/dkm/all-events', [ApprovalController::class, 'allEvents'])->name('dkm.all-events');
 });
 
 // Jemaah Routes - Event Registration
